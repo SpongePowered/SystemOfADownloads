@@ -10,7 +10,7 @@ module org.spongepowered.downloads.events.outbox {
     requires transitive jakarta.inject;
     requires org.reactivestreams;
     requires reactor.core;
-    requires transitive org.spongepowered.downloads.events;
+    requires transitive org.spongepowered.downloads.events.api;
     requires io.micronaut.data.micronaut_data_r2dbc;
     requires transitive jakarta.persistence;
 }

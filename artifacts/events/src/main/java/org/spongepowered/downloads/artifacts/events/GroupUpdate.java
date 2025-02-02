@@ -57,7 +57,7 @@ public sealed interface GroupUpdate extends EventMarker {
 
     @JsonTypeName("artifact-registered")
     @JsonDeserialize
-    final record ArtifactRegistered(ArtifactCoordinates coordinates) implements GroupUpdate {
+    record ArtifactRegistered(ArtifactCoordinates coordinates) implements GroupUpdate {
 
         @JsonCreator
         public ArtifactRegistered {

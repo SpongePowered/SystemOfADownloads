@@ -17,7 +17,7 @@ include(
     "artifacts:worker",
     "artifacts:server",
     "artifacts:events",
-    "events",
+    "events:api",
     "events:outbox",
     "groups",
     "groups:api",

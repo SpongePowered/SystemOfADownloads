@@ -24,6 +24,10 @@
  */
 package org.spongepowered.downloads.artifacts.server.cmd.group;
 
+import io.micronaut.core.annotation.Introspected;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public sealed interface GroupCommand {
 
     record RegisterArtifact(
@@ -32,8 +36,11 @@ public sealed interface GroupCommand {
     ) implements GroupCommand {
     }
 
+    @Introspected
     record RegisterGroup(
         String mavenCoordinates,
+        @NotBlank
+        @Size(max = 256)
         String name,
         String website
     ) implements GroupCommand {

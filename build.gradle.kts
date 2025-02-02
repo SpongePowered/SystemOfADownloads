@@ -11,20 +11,39 @@ plugins {
     id("io.micronaut.docker") version "4.4.0" apply false
     id("io.micronaut.aot") version "4.4.0" apply false
     id("io.micronaut.test-resources") version "4.4.0" apply false
-    id("org.gradlex.extra-java-module-info") version "1.9" apply false
+    id("net.kyori.indra.licenser.spotless") version "3.1.3"
 }
 
 repositories {
     mavenCentral()
 }
+val organization: String by project
+val projectUrl: String by project
+
 
 tasks.wrapper {
     distributionType = Wrapper.DistributionType.ALL
 }
 
+indraSpotlessLicenser {
+    licenseHeaderFile(rootProject.file("HEADER.txt"))
+
+    property("name", "Sponge")
+    property("organization", organization)
+    property("url", projectUrl)
+}
 
 allprojects {
     apply(plugin = "java-library")
+    apply(plugin = "net.kyori.indra.licenser.spotless")
+
+    indraSpotlessLicenser {
+        licenseHeaderFile(rootProject.file("HEADER.txt")) // default value
+        property("name", "SystemOfADownload") // replace $name in the header file with the provided value
+        property("organization", organization)
+        property("url", projectUrl)
+
+    }
 
     java {
         sourceCompatibility = JavaVersion.VERSION_21

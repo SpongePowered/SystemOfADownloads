@@ -3,6 +3,7 @@ micronaut = "4.2.3"
 jackson = "2.17.2"
 maven_artifact = "3.9.9"
 jakartaValidation = "3.0.2"
+jakartaPersistence = "2.2.3"
 jgit = "6.8.0.202311291450-r"
 
 [libraries]
@@ -14,10 +15,14 @@ snakeyaml = { module = "org.yaml:snakeyaml" }
 # dependency injection
 micronaut-inject = { module = "io.micronaut:micronaut-inject-java" }
 
+# logging
+jansi = { module = "org.fusesource.jansi:jansi", version = "2.4.0" }
+
 # http
 
 micronaut-http-jdk-client = { module = "io.micronaut:micronaut-http-client-jdk" }
 micronaut-management = { module = "io.micronaut:micronaut-management" }
+micronaut-http-server-netty = { module = "io.micronaut:micronaut-http-server-netty" }
 
 # serder
 jacksonBom = { module = "com.fasterxml.jackson:jackson-bom", version.ref = "jackson" }
@@ -33,7 +38,7 @@ maven = { module = "org.apache.maven:maven-artifact", version.ref = "maven_artif
 micronaut-data-r2dbc = { module = "io.micronaut.data:micronaut-data-r2dbc" }
 vertx-postgres = { module = "io.vertx:vertx-pg-client" }
 postgres-driver = { module = "org.postgresql:postgresql" }
-jakarta-persistence = { module = "jakarta.persistence:jakarta.persistence-api" }
+jakarta-persistence = { module = "jakarta.persistence:jakarta.persistence-api", version.ref = "jakartaPersistence" }
 ## enable liquibase migrations
 micronaut-sql-hikari = { module = "io.micronaut.sql:micronaut-jdbc-hikari" }
 liquibase = { module = "io.micronaut.liquibase:micronaut-liquibase"}
@@ -77,10 +82,9 @@ junit = ["junit-api", "micronaut-test-junit5"]
 micronaut-testresources = ["micronaut-test-resources"]
 micronaut-testresources-services = ["postgres-driver"]
 micronaut-runtime = ["snakeyaml"]
-micronaut-http = ["micronaut-http-jdk-client", "micronaut-management"]
+micronaut-http = ["micronaut-http-jdk-client", "micronaut-management", "micronaut-http-server-netty"]
 junit-runtime = ["junit-engine"]
+logging = ["jansi"]
 
 validation = ["jakarta-validation", "micronaut-validation"]
 validation-processors = ["micronaut-http-validation", "micronaut-jakarta-validation", "micronaut-inject"]
-
-

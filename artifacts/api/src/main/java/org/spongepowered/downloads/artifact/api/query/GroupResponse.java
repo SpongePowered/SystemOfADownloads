@@ -32,7 +32,6 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.spongepowered.downloads.artifact.api.Group;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
 public sealed interface GroupResponse {
 
     @JsonSerialize

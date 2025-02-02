@@ -24,13 +24,13 @@
  */
 package org.spongepowered.downloads.artifact.api.query;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import java.util.List;
 
 public final class ArtifactDetails {
 
     @JsonSerialize
-    @JsonTypeInfo(use = JsonTypeInfo.Id.NONE)
     public sealed interface Response {
 
         record Ok(
@@ -38,18 +38,22 @@ public final class ArtifactDetails {
             String displayName,
             String website,
             String issues,
-            String gitRepo
-        )  implements Response{
-
+            List<String> gitRepo
+        ) implements Response {
         }
 
-        record ValidRepo(String url) implements Response {}
+        record ValidRepo(String repoURL) implements Response {
+        }
 
-        record NotFound(String message) implements Response {}
+        record NotFound(String message) implements Response {
+        }
 
-        record Error(String message) implements Response {}
+        record Error(String message) implements Response {
+        }
+
+        record NotModified() implements Response {
+        }
     }
-
 
 
 }

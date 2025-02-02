@@ -24,6 +24,7 @@
  */
 package org.spongepowered.downloads.artifacts.server.cmd.group;
 
+import io.micronaut.core.annotation.Introspected;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.transaction.annotation.Transactional;
 import jakarta.inject.Inject;
@@ -42,8 +43,10 @@ import org.spongepowered.downloads.events.outbox.OutboxEvent;
 import org.spongepowered.downloads.events.outbox.OutboxRepository;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.Optional;
 
+@Introspected
 @Singleton
 public class GroupService {
 
@@ -60,7 +63,8 @@ public class GroupService {
     public HttpResponse<GroupRegistration.Response> registerGroup(GroupCommand.RegisterGroup rg) {
         Optional<Group> existingGroup = groupRepository.findByGroupId(rg.mavenCoordinates());
         if (existingGroup.isPresent()) {
-            return HttpResponse.badRequest(new GroupRegistration.Response.GroupAlreadyRegistered(rg.mavenCoordinates()));
+            return HttpResponse.badRequest(
+                new GroupRegistration.Response.GroupAlreadyRegistered(rg.mavenCoordinates()));
         }
 
         Group group = new Group();
@@ -69,9 +73,11 @@ public class GroupService {
         group.setWebsite(rg.website());
         groupRepository.save(group);
 
-        OutboxEvent event = new OutboxEvent("GroupCreated", group.groupId(), new GroupUpdate.GroupRegistered(rg.mavenCoordinates(), rg.name(), rg.website()));
-        Mono.from(outboxRepository.save(event)).then().block();
-        final var groupDTO = new org.spongepowered.downloads.artifact.api.Group(group.groupId(), group.name(), group.website());
+        this.outboxRepository
+            .saveAll(List.of(new GroupUpdate.GroupRegistered(rg.mavenCoordinates(), rg.name(), rg.website())))
+            .block();
+        final var groupDTO = new org.spongepowered.downloads.artifact.api.Group(
+            group.getGroupId(), group.getName(), group.getWebsite());
 
         return HttpResponse.ok(new GroupRegistration.Response.GroupRegistered(groupDTO));
     }
@@ -86,7 +92,8 @@ public class GroupService {
         Group group = groupOptional.get();
         boolean artifactExists = artifactRepository.existsByArtifactIdAndGroup(ra.artifact(), group);
         if (artifactExists) {
-            return HttpResponse.badRequest(new Response.ArtifactRegistered(new ArtifactCoordinates(groupId, ra.artifact())));
+            return HttpResponse.badRequest(
+                new Response.ArtifactRegistered(new ArtifactCoordinates(groupId, ra.artifact())));
         }
 
         Artifact artifact = new Artifact();
@@ -94,10 +101,12 @@ public class GroupService {
         artifact.setGroup(group);
         artifactRepository.save(artifact);
 
-        var event = new OutboxEvent("ArtifactsGroupUpserted", group.groupId(), new GroupUpdate.ArtifactRegistered(artifact.coordinates()));
-        Mono.from(outboxRepository.save(event)).then().block();
-        event = new OutboxEvent("ArtifactsArtifactUpserted", artifact.getArtifactId(), new ArtifactEvent.ArtifactRegistered(artifact.coordinates()));
-        Mono.from(outboxRepository.save(event)).then().block();
+
+        this.outboxRepository.saveAll(
+            List.of(
+                new GroupUpdate.ArtifactRegistered(artifact.coordinates()),
+                new ArtifactEvent.ArtifactRegistered(artifact.coordinates())
+            )).block();
 
 
         return HttpResponse.ok(new Response.ArtifactRegistered(artifact.coordinates()));

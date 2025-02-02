@@ -45,36 +45,35 @@ dependencies {
     implementation(project(":artifacts:events"))
     implementation(project(":events:outbox"))
 
-    // databases
-    implementation(libs.bundles.appSerder)
-    runtimeOnly(libs.bundles.postgres.runtime)
-    implementation(libs.bundles.postgres.r2dbc)
     annotationProcessor(libs.bundles.postgres.annotations)
-
-    // Serder
-    annotationProcessor(libs.bundles.serder.processor)
-    implementation(libs.bundles.serder)
-
-    // Validation
     annotationProcessor(libs.bundles.validation.processors)
+    annotationProcessor(libs.bundles.serder.processor)
+
+    implementation(libs.bundles.serder)
+    // Micronaut - HTTP
+    implementation(libs.bundles.micronaut.http)
+
+    // Git
+    implementation(libs.bundles.git)
+
+    runtimeOnly(libs.bundles.micronaut.runtime)
+    runtimeOnly(libs.bundles.logging)
+
+    implementation(libs.bundles.appSerder)
+
+    // databases
+    implementation(libs.bundles.postgres.r2dbc)
+    // Liquibase required jdbc driver
+    runtimeOnly(libs.postgres.r2dbc)
 
 
-    // Add micronaut test resources
+
     testImplementation(libs.bundles.micronaut.testresources)
     testImplementation(libs.bundles.junit)
     testImplementation(libs.bundles.postgres.test)
     testRuntimeOnly(libs.bundles.junit.runtime)
     testResourcesService(libs.postgres.driver)
-    implementation(libs.bundles.git)
 
-    runtimeOnly(libs.bundles.micronaut.runtime)
-
-
-    // Micronaut
-    implementation(libs.bundles.micronaut.http)
-
-
-    // GraalVM
     compileOnly("org.graalvm.nativeimage:svm")
 
 }

@@ -23,7 +23,7 @@ micronaut {
 }
 
 dependencies {
-    api(project(":events"))
+    api(project(":events:api"))
 
     // Micronaut kafka dependency
     implementation("io.micronaut.kafka:micronaut-kafka")

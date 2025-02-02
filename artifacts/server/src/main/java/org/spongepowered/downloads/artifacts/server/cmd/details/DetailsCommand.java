@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.spongepowered.downloads.artifact.api.ArtifactCoordinates;
 
 import java.net.URL;
+import java.util.List;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
     property = "type")
@@ -89,6 +90,16 @@ public sealed interface DetailsCommand {
 
         @JsonCreator
         public UpdateGitRepository {
+        }
+    }
+
+    @JsonDeserialize
+    record UpdateGitRepositories(
+        ArtifactCoordinates coordinates,
+        List<String> gitRemote
+    ) implements DetailsCommand {
+        @JsonCreator
+        public UpdateGitRepositories {
         }
     }
 
